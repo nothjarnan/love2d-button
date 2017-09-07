@@ -1,7 +1,7 @@
 # Nothy's Button API documentation
 ***
 Nothy's Button API is an API aiming to make buttons far easier to make in Love2D, whereas *other* APIs have only added extra steps to making buttons. Nothy's Button API is made to be as simple and straightforward as possible.
-
+***
 ### Importing the API into your project.
 You can import Nothy's Button API as you would with any other API in Lua.
 ```lua
@@ -12,6 +12,7 @@ Say you have the API saved in *MyDirectory/buttonAPI.lua*, then the import code 
 ```lua
 local buttons = require  'MyDirectory.buttonAPI'
 ```
+***
 ### Creating and removing buttons using the API
 Button creation with Nothy's Button API is as simple as it can get. To begin with, you have to determine where you'd want the button (pixel coordinates), and what size it should be (in pixels).
 Now, in ``love.load()`` simply put this:
@@ -50,6 +51,7 @@ When removing a button, simply run the following snippet of code:
 buttons:removeButton("example")
 ```
 Of course, you'd want to use your own button name, and not use example all the time. Please keep in mind that once you remove the button, you will have to create a new one with the same properties to get it back.
+***
 ### What are uiLayouts and how do I use them?
 A uiLayout is simply a string of text that defines what layout a button is part of.
 If you create a button that has the uiLayout ``example``, then you render that uiLayout, only those with the uiLayout ``example`` will be rendered.
@@ -77,7 +79,7 @@ function love.draw()
 end
 ```
 You can leave the uiLayout variable of ``:drawAllButtons()`` empty, then the API will automatically set it to ``all``, which as the name suggests, renders *all* the layouts.
-
+***
 ### Adding buttons to a uiLayout
 Adding a button to a uiLayout is simple.
 If you have a uiLayout called ``main``, you'd simply pass in a string into the *final* variable of ``:createButton()``
@@ -91,7 +93,7 @@ function love.draw()
   buttons:drawAllButtons("main")
 end
 ```
-
+***
 ### Rendering buttons
 If you have a uiLayout, please look in ``What are uiLayouts and how do I use them?``
 Otherwise you can simply render every button as-is with the following bit of code:
@@ -100,7 +102,7 @@ function love.draw()
   buttons:drawAllButtons()
 end
 ```
-
+***
 ### Clicking on buttons
 When you have a button, in this case we'll use the example button, you can set it as clickable or not without any effort at all.
 All you have to do is run the following command:
