@@ -112,9 +112,18 @@ function buttonAPI:drawButton(name)
     if buttons[name].beingClicked then
       love.graphics.setColor(255,255,255)
     end
-    love.graphics.rectangle("fill",buttons[name].x, buttons[name].y, buttons[name].width, buttons[name].height)
-    love.graphics.setColor(10,10,10)
-    love.graphics.print(buttons[name].label,buttons[name].x, buttons[name].y+(buttons[name].height/2))
+    local requiredWidth = love.graphics.getFont():getWidth(buttons[name].label)
+    if buttons[name].width <= requiredWidth then
+          love.graphics.rectangle("fill",buttons[name].x, buttons[name].y, requiredWidth+4, buttons[name].height, 3, 3)
+          love.graphics.setColor(10,10,10)
+          love.graphics.print(buttons[name].label,buttons[name].x+2, buttons[name].y+(buttons[name].height/2)-(love.graphics.getFont():getHeight()/2))
+    else
+        love.graphics.rectangle("fill",buttons[name].x, buttons[name].y, buttons[name].width, buttons[name].height, 3, 3)
+        love.graphics.setColor(10,10,10)
+        love.graphics.print(buttons[name].label,buttons[name].x, buttons[name].y+(buttons[name].height/2)-(love.graphics.getFont():getHeight()/2))
+    end
+
+
   end
 end
 
