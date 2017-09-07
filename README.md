@@ -62,6 +62,13 @@ function love.draw()
 end
 ```
 You can leave the uiLayout variable of ``:drawAllButtons()`` empty, then the API will automatically set it to ``all``, which as the name suggests, renders *all* the layouts.
+#### What if you want to move a button somewhere else?
+**Added in version 1.1**
+
+You simply call the following line of code.
+```lua
+  buttons:moveButton("example",newPositionX, newPositionY)
+```
 
 ### Adding buttons to a uiLayout
 Adding a button to a uiLayout is simple.

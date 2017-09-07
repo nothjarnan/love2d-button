@@ -5,7 +5,7 @@
 local buttons = {
 }
 buttonAPI = {
-  version = "version 1.0",
+  version = "version 1.1",
 }
 
 function buttonAPI:checkClick(x,y, uiLayout)
@@ -15,8 +15,15 @@ function buttonAPI:checkClick(x,y, uiLayout)
   for k,v in pairs(buttons) do
     if x >= buttons[k].x and x <= buttons[k].x + buttons[k].width and y >= buttons[k].y and y <= buttons[k].y + buttons[k].height and buttons[k].clickable then
       if uiLayout == buttons[k].uiLayout then
+        buttons[k].beingClicked = true
+        buttons[k].clickTime = love.timer.getTime()
+        print(love.timer.getTime())
         return buttons[k].name
+
       elseif uiLayout == "all" then
+        buttons[k].beingClicked = true
+        buttons[k].clickTime = love.timer.getTime()
+        print(love.timer.getTime())
         return buttons[k].name
       end
     end
@@ -38,7 +45,19 @@ function buttonAPI:getButton(button)
   end
   return nil
 end
+function buttonAPI:moveButton(name,newposX, newposY)
+  if buttons[name] ~= nil then
+    buttons[name].x = newposX
+    buttons[name].y = newposY
+  end
 
+end
+
+function buttonAPI:setHoverable(name, hoverable)
+  if buttons[name] ~= nil then
+    buttons[name].hoverable = hoverable
+  end
+end
 function buttonAPI:createButton(name, label, x, y, width, height, uiLayout)
   if not uiLayout then
     uiLayout = "all"
@@ -53,6 +72,17 @@ function buttonAPI:createButton(name, label, x, y, width, height, uiLayout)
   buttons[name].width = width
   buttons[name].height = height
   buttons[name].clickable = true
+  buttons[name].setHoverable = true
+  buttons[name].isHovered = false
+  buttons[name].beingClicked = false
+  buttons[name].clickTime = 0
+  buttons[name].hoverColor = {
+    r = 235,
+    g = 235,
+    b = 235,
+    a = 255
+  }
+
   print("Created new button "..name.." using uilayout "..uiLayout)
 
 end
@@ -68,9 +98,19 @@ end
 function buttonAPI:drawButton(name)
   if buttons[name] ~= nil then
     if buttons[name].clickable then
-      love.graphics.setColor(255,255,255)
+
+      if buttons[name].isHovered then
+        love.graphics.setColor(buttons[name].hoverColor.r,buttons[name].hoverColor.g,buttons[name].hoverColor.b)
+      else
+        love.graphics.setColor(210,210,210)
+      end
+
     else
       love.graphics.setColor(150,150,150)
+
+    end
+    if buttons[name].beingClicked then
+      love.graphics.setColor(255,255,255)
     end
     love.graphics.rectangle("fill",buttons[name].x, buttons[name].y, buttons[name].width, buttons[name].height)
     love.graphics.setColor(10,10,10)
@@ -89,6 +129,21 @@ function buttonAPI:drawAllButtons(uiLayout)
       if uiLayout == buttons[k].uiLayout or buttons[k].uiLayout == "all" then
         buttonAPI:drawButton(k)
       end
+    end
+  end
+end
+function buttonAPI:update(x,y)
+  for k,v in pairs(buttons) do
+    if (buttons[k].clickTime+.1) - love.timer.getTime() < 0 then
+      buttons[k].beingClicked = false
+      buttons[k].clickTime = 0
+    else
+
+    end
+    if x >= buttons[k].x and x <= buttons[k].x + buttons[k].width and y >= buttons[k].y and y <= buttons[k].y + buttons[k].height and buttons[k].clickable then
+      buttons[k].isHovered = true
+    else
+      buttons[k].isHovered = false
     end
   end
 end
