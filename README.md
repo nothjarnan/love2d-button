@@ -23,10 +23,25 @@ function love.load()
 end
 ```
 In this case, the first string variable 'example', is the button name that you will be looking for when looking for clicks. The second string variable is the label, it is what the user will see when the program is running.
+
+A thing worth noting is that if you make the text *wider* than the button, the API will automatically adjust the width of the button to accomodate for this.
+
+
 The first integer is the X position of the button, the second integer is the Y position of the button. The two last integers are the width and height of the button.
 The final variable called uiLayout is something we will dive deeper into in the next section.
 
 **Keep in mind that creating new buttons in ``love.update()`` or any continuous loop is HEAVILY discouraged for very obvious reasons.**
+
+**Added in version 1.1**
+You can move a button as well, by simply calling this method:
+```lua
+buttons:moveButton("example", newPositionX, newPositionY)
+```
+or if you'd like to animate where the button is going, you can simply call the following method:
+```lua
+buttons:moveTowards("example",newPositionX, newPositionY, speed)
+```
+*NOTE:* Keep in mind that when your DeltaTime is high, ``:moveTowards()`` can sometimes act very strangely. At the moment the cause for this is unknown, but is being looked into.
 
 Removing buttons in the API is about as simple as creating them, if not simpler.
 
@@ -51,7 +66,7 @@ local layouts =  {
 }
 local currentLayoutIndex = 1
 ```
-Keep in mind that the API does not care about spaces or multiline strings, it'll simply work.
+Keep in mind that the API does not care about spaces, it'll simply work.
 You can use numbers as well for uiLayouts, though being discouraged it is possible.
 
 When you render, you simply do this:
@@ -62,13 +77,6 @@ function love.draw()
 end
 ```
 You can leave the uiLayout variable of ``:drawAllButtons()`` empty, then the API will automatically set it to ``all``, which as the name suggests, renders *all* the layouts.
-#### What if you want to move a button somewhere else?
-**Added in version 1.1**
-
-You simply call the following line of code.
-```lua
-  buttons:moveButton("example",newPositionX, newPositionY)
-```
 
 ### Adding buttons to a uiLayout
 Adding a button to a uiLayout is simple.

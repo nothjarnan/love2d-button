@@ -17,13 +17,13 @@ function buttonAPI:checkClick(x,y, uiLayout)
       if uiLayout == buttons[k].uiLayout then
         buttons[k].beingClicked = true
         buttons[k].clickTime = love.timer.getTime()
-        print(love.timer.getTime())
+        --print(love.timer.getTime())
         return buttons[k].name
 
       elseif uiLayout == "all" then
         buttons[k].beingClicked = true
         buttons[k].clickTime = love.timer.getTime()
-        print(love.timer.getTime())
+        --print(love.timer.getTime())
         return buttons[k].name
       end
     end
@@ -45,6 +45,13 @@ function buttonAPI:getButton(button)
   end
   return nil
 end
+function buttonAPI:getButtonPos(name)
+  if buttons[name] ~= nil then
+    return buttons[name].x, buttons[name].y
+  else
+    return 0,0
+  end
+end
 function buttonAPI:moveButton(name,newposX, newposY)
   if buttons[name] ~= nil then
     buttons[name].x = newposX
@@ -52,7 +59,11 @@ function buttonAPI:moveButton(name,newposX, newposY)
   end
 
 end
-
+function buttonAPI:updateLabel(name,newLabel)
+  if buttons[name] ~= nil then
+    buttons[name].label = newLabel
+  end
+end
 function buttonAPI:setHoverable(name, hoverable)
   if buttons[name] ~= nil then
     buttons[name].hoverable = hoverable
@@ -82,7 +93,12 @@ function buttonAPI:createButton(name, label, x, y, width, height, uiLayout)
     b = 235,
     a = 255
   }
-
+  buttons[name].moving = false
+  buttons[name].newPos = {
+    x = 0,
+    y = 0,
+  }
+  buttons[name].speed = 0
   print("Created new button "..name.." using uilayout "..uiLayout)
 
 end
@@ -94,6 +110,20 @@ function buttonAPI:removeButton(name)
     end
   end
   return false
+end
+function buttonAPI:moveTowards(name,x,y, speed)
+  if not speed then speed = 20 end
+  buttons[name].moving = true
+  buttons[name].newPos.x = x
+  buttons[name].newPos.y = y
+  buttons[name].speed = speed
+end
+function buttonAPI:getSpeed(name)
+  if buttons[name] ~= nil then
+    return buttons[name].speed
+  else
+    return 0
+  end
 end
 function buttonAPI:drawButton(name)
   if buttons[name] ~= nil then
@@ -109,11 +139,13 @@ function buttonAPI:drawButton(name)
       love.graphics.setColor(150,150,150)
 
     end
+
     if buttons[name].beingClicked then
       love.graphics.setColor(255,255,255)
     end
     local requiredWidth = love.graphics.getFont():getWidth(buttons[name].label)
     if buttons[name].width <= requiredWidth then
+          buttons[name].width = requiredWidth
           love.graphics.rectangle("fill",buttons[name].x, buttons[name].y, requiredWidth+4, buttons[name].height, 3, 3)
           love.graphics.setColor(10,10,10)
           love.graphics.print(buttons[name].label,buttons[name].x+2, buttons[name].y+(buttons[name].height/2)-(love.graphics.getFont():getHeight()/2))
@@ -142,8 +174,44 @@ function buttonAPI:drawAllButtons(uiLayout)
   end
 end
 function buttonAPI:update(x,y)
+  -- Delta time is convenient to get in runtime
+  local dt = love.timer.getDelta()
+  --print("DELTA: "..dt)
+  if not x or not y then
+    x, y = love.mouse.getPosition()
+  end
+
   for k,v in pairs(buttons) do
-    if (buttons[k].clickTime+.1) - love.timer.getTime() < 0 then
+    local previousPositionX, previousPositionY = buttons[k].x, buttons[k].y
+    if buttons[k].moving then
+      if buttons[k].x > buttons[k].newPos.x and buttons[k].newPos.x ~= buttons[k].x then
+        buttons[k].x = buttons[k].x - buttons[k].speed*dt
+      else
+        if buttons[k].newPos.x ~= buttons[k].x then
+          buttons[k].x = buttons[k].x + buttons[k].speed *dt
+        end
+      end
+      if buttons[k].y > buttons[k].newPos.y and buttons[k].newPos.y ~= buttons[k].y then
+        buttons[k].y = buttons[k].y - buttons[k].speed *dt
+      else
+        if buttons[k].newPos.y ~= buttons[k].y then
+          buttons[k].y = buttons[k].y + buttons[k].speed *dt
+        end
+      end
+      --rint("SPEED:"..(previousPositionX + buttons[k].x)*dt)
+      --print("POSITION: X"..buttons[k].x.." Y:"..buttons[k].y)
+      -- if (previousPositionX - buttons[k].x)*dt < 0.001 then
+      --   buttons[k].moving = false
+      -- end
+      if math.abs(buttons[k].newPos.x - buttons[k].x)*dt < 0.1 and math.abs(buttons[k].newPos.y - buttons[k].y)*dt < 0.1 then
+        buttons[k].moving = false
+        buttons[k].speed = 0
+      end
+      -- if buttons[k].x == buttons[k].newPos.x and buttons[k].y ==  buttons[k].newPos.y then
+      --   buttons[k].moving = false
+      -- end
+    end
+    if (buttons[k].clickTime+.1) - love.timer.getTime() <= 0 then
       buttons[k].beingClicked = false
       buttons[k].clickTime = 0
     else
