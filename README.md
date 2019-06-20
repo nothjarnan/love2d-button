@@ -1,6 +1,7 @@
-# Nothy's Button API documentation
+# Nothy's Button API Upgraded documentation
 ***
 Nothy's Button API is an API aiming to make buttons far easier to make in Love2D, whereas *other* APIs have only added extra steps to making buttons. Nothy's Button API is made to be as simple and straightforward as possible.
+The Upgraded version adds to it.
 ***
 ### Importing the API into your project.
 You can import Nothy's Button API as you would with any other API in Lua.
@@ -112,16 +113,16 @@ buttons:setClickable("example",true) -- Button is clickable again - woohoo!
 ```
 Now, you'll most likely want to have a button be *clickable* and not just show whether or not it is.
 
-There's really only one way of doing it, and that is to have some code within ``love.mousepressed()`` that simply compares where the user clicked and the layout bounds of the buttons. This sounds complicated, but in reality it's about as easy as creating a button.
-There's a built in command in Nothy's Button API that does this for you, and returns which button was pressed.
-It can be used like this:
+There was really only one way of doing it, and that was to have some code within ``love.mousepressed()`` that simply compares where the user clicked and the layout bounds of the buttons. This sounds complicated, but in reality it was about as easy as creating a button.
+There was a built in command in Nothy's Button API that did this for you, and returned which button was pressed.
+It was used like this:
 ```lua
 function love.onmousepressed(x, y, button, isTouch)
   local clickedButton = buttons:checkClick(x,y)
   print(clickedButton)
 end
 ```
-If we were to click on the button ``example`` the variable clickedButton would be ``example``. Knowing this you can make very complicated UIs with ease, such as this:
+If we were to click on the button ``example`` the variable clickedButton would be ``example``. Knowing this you could make very complicated UIs with ease, such as this:
 ```lua
 function love.onmousepressed(x, y, button, isTouch)
   local clickedButton = buttons:checkClick(x,y)
@@ -130,5 +131,13 @@ function love.onmousepressed(x, y, button, isTouch)
   end
 end
 ```
-
-I'm going to add a way to pass functions directly to the button, so if you add a button you can give it a function that it'll run on click.
+However, I changed it up, like so:
+```lua
+buttons:addListener(button, function)
+```
+That's it! Much easier now. Add a function, and it'll be called, including the `button` and `isTouch` parameters.
+If you want to listen for normal clicks too, use:
+```lua
+buttons:clickListener(function)
+```
+and it will call `function` with all 4 params.
