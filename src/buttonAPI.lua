@@ -4,6 +4,7 @@
 
 local buttons = {
 }
+local clickListener = null
 buttonAPI = {
   version = "version 1.1",
 }
@@ -28,7 +29,6 @@ function buttonAPI:checkClick(x,y, uiLayout)
       end
     end
   end
-
 end
 function buttonAPI:setClickable(button, clicky)
   if not clicky then
@@ -57,7 +57,6 @@ function buttonAPI:moveButton(name,newposX, newposY)
     buttons[name].x = newposX
     buttons[name].y = newposY
   end
-
 end
 function buttonAPI:updateLabel(name,newLabel)
   if buttons[name] ~= nil then
@@ -100,7 +99,6 @@ function buttonAPI:createButton(name, label, x, y, width, height, uiLayout)
   }
   buttons[name].speed = 0
   print("Created new button "..name.." using uilayout "..uiLayout)
-
 end
 function buttonAPI:removeButton(name)
   for k,v in pairs(buttons) do
@@ -198,7 +196,7 @@ function buttonAPI:update(x,y)
           buttons[k].y = buttons[k].y + buttons[k].speed *dt
         end
       end
-      --rint("SPEED:"..(previousPositionX + buttons[k].x)*dt)
+      --print("SPEED:"..(previousPositionX + buttons[k].x)*dt)
       --print("POSITION: X"..buttons[k].x.." Y:"..buttons[k].y)
       -- if (previousPositionX - buttons[k].x)*dt < 0.001 then
       --   buttons[k].moving = false
@@ -223,5 +221,18 @@ function buttonAPI:update(x,y)
       buttons[k].isHovered = false
     end
   end
+end
+function buttonAPI:addListener(button, fun)
+  buttons[button].listener = fun
+end
+function buttonAPI:clickListener(fun)
+  clickListener = fun
+end
+function love.onmousepressed(x, y, clickType, isTouch)
+  local buttonPressed = buttonAPI:checkClick(x, y)
+  if buttons[buttonPressed].listener ~= null then
+    buttons[buttonPressed].listener(clickType, isTouch)
+  end
+  if clickListener then clickListener(x, y, clickType, isTouch) end
 end
 return buttonAPI
