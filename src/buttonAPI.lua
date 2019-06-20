@@ -9,7 +9,7 @@ buttonAPI = {
   version = "version 1.1",
 }
 
-local function buttonAPI:checkClick(x,y, uiLayout)
+function buttonAPI:checkClick(x,y, uiLayout)
   if not uiLayout then
     uiLayout = "all"
   end
