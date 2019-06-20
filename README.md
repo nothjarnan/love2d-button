@@ -1,7 +1,6 @@
-# Nothy's Button API Upgraded documentation
+# Nothy's Button API documentation
 ***
 Nothy's Button API is an API aiming to make buttons far easier to make in Love2D, whereas *other* APIs have only added extra steps to making buttons. Nothy's Button API is made to be as simple and straightforward as possible.
-The Upgraded version adds to it.
 ***
 ### Importing the API into your project.
 You can import Nothy's Button API as you would with any other API in Lua.
@@ -131,11 +130,11 @@ function love.onmousepressed(x, y, button, isTouch)
   end
 end
 ```
-However, I changed it up, like so:
+However, I changed it up for Nothy, like so:
 ```lua
 buttons:addListener(button, function)
 ```
-That's it! Much easier now. Add a function, and it'll be called, including the `button` and `isTouch` parameters.
+That's it! Much easier now. It works exactly the same way, too! Add a function, and it'll be called, including the `button` and `isTouch` parameters.
 If you want to listen for normal clicks too, use:
 ```lua
 buttons:clickListener(function)
